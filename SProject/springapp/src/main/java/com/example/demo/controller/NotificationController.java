@@ -9,67 +9,54 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/notifications") // Ensuring API path consistency
+@RequestMapping("/api/notifications")
 public class NotificationController {
 
     @Autowired
     private NotificationService notificationService;
 
-    // ✅ Create Notification
-    @PostMapping("/post")
-    public ResponseEntity<Notification> addNotification(@RequestBody Notification notification) {
-        return ResponseEntity.ok(notificationService.saveNotification(notification));
+    // ✅ Create Notification (POST)
+    @PostMapping
+    public ResponseEntity<Notification> createNotification(@RequestBody Notification notification) {
+        return ResponseEntity.ok(notificationService.createNotification(notification));
     }
 
-    // ✅ Get All Notifications
-    @GetMapping("/all")
+    // ✅ Get All Notifications (GET)
+    @GetMapping
     public ResponseEntity<List<Notification>> getAllNotifications() {
         return ResponseEntity.ok(notificationService.getAllNotifications());
     }
 
-    // ✅ Get Notification by ID
+    // ✅ Get Notification by ID (GET)
     @GetMapping("/{id}")
     public ResponseEntity<Notification> getNotificationById(@PathVariable Long id) {
-        Optional<Notification> notification = notificationService.getNotificationById(id);
-        return notification.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(notificationService.getNotificationById(id));
     }
 
-    // ✅ Update Notification by ID
+    // ✅ Update Notification (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<Notification> updateNotification(@PathVariable Long id, @RequestBody Notification notificationDetails) {
-        Optional<Notification> existingNotification = notificationService.getNotificationById(id);
-
-        if (existingNotification.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Notification notification = existingNotification.get();
-        notification.setMessage(notificationDetails.getMessage());
-        notification.setType(notificationDetails.getType());
-        notification.setTimestamp(notificationDetails.getTimestamp());
-
-        return ResponseEntity.ok(notificationService.saveNotification(notification));
+    public ResponseEntity<Notification> updateNotification(@PathVariable Long id, @RequestBody Notification updatedNotification) {
+        return ResponseEntity.ok(notificationService.updateNotification(id, updatedNotification));
     }
 
-    // ✅ Delete Notification by ID
+    // ✅ Delete Notification (DELETE)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         notificationService.deleteNotification(id);
         return ResponseEntity.noContent().build();
     }
 
-    // ✅ Get Paginated & Sorted Notifications
-    @GetMapping("/paginated")
-    public ResponseEntity<Page<Notification>> getPaginatedNotifications(Pageable pageable) {
-        return ResponseEntity.ok(notificationService.getAllNotifications(pageable));
+    // ✅ Get Notifications by Type (JPQL Query)
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Notification>> getNotificationsByType(@PathVariable String type) {
+        return ResponseEntity.ok(notificationService.getNotificationsByType(type));
     }
 
-    // ✅ Find Notifications by Type (JPQL)
-    @GetMapping("/by-type/{type}")
-    public ResponseEntity<List<Notification>> getNotificationsByType(@PathVariable String type) {
-        return ResponseEntity.ok(notificationService.findNotificationsByType(type));
+    // ✅ Get Notifications with Pagination & Sorting
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Notification>> getNotificationsPaged(Pageable pageable) {
+        return ResponseEntity.ok(notificationService.getNotificationsPaged(pageable));
     }
 }

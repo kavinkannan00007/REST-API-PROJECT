@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class NotificationService {
@@ -16,33 +15,43 @@ public class NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    // ✅ Save Notification (Create & Update)
-    public Notification saveNotification(Notification notification) {
+    // ✅ Create Notification
+    public Notification createNotification(Notification notification) {
         return notificationRepository.save(notification);
     }
 
-    // ✅ Get All Notifications (List)
+    // ✅ Get All Notifications
     public List<Notification> getAllNotifications() {
         return notificationRepository.findAll();
     }
 
     // ✅ Get Notification by ID
-    public Optional<Notification> getNotificationById(Long id) {
-        return notificationRepository.findById(id);
+    public Notification getNotificationById(Long id) {
+        return notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
     }
 
-    // ✅ Delete Notification by ID
+    // ✅ Update Notification
+    public Notification updateNotification(Long id, Notification updatedNotification) {
+        Notification existing = getNotificationById(id);
+        existing.setMessage(updatedNotification.getMessage());
+        existing.setTimestamp(updatedNotification.getTimestamp());
+        existing.setType(updatedNotification.getType());
+        return notificationRepository.save(existing);
+    }
+
+    // ✅ Delete Notification
     public void deleteNotification(Long id) {
         notificationRepository.deleteById(id);
     }
 
-    // ✅ Get Paginated & Sorted Notifications
-    public Page<Notification> getAllNotifications(Pageable pageable) {
-        return notificationRepository.findAll(pageable);
+    // ✅ Get Notifications by Type (JPQL Query)
+    public List<Notification> getNotificationsByType(String type) {
+        return notificationRepository.findByType(type);
     }
 
-    // ✅ Find Notifications by Type (JPQL)
-    public List<Notification> findNotificationsByType(String type) {
-        return notificationRepository.findByType(type);
+    // ✅ Get Notifications with Pagination & Sorting
+    public Page<Notification> getNotificationsPaged(Pageable pageable) {
+        return notificationRepository.findAll(pageable);
     }
 }

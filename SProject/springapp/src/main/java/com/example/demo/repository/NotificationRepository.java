@@ -11,10 +11,10 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    // ✅ JPQL Query: Get Notifications by Type
+    //JPQL Query: Get Notifications by Type
     List<Notification> findByType(String type);
 
-    // ✅ Pagination and Sorting
+    //Pagination and Sorting
     @SuppressWarnings("null")
     Page<Notification> findAll(Pageable pageable);
 }

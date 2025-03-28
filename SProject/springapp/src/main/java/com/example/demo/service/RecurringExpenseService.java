@@ -9,18 +9,21 @@ import java.util.List;
 
 @Service
 public class RecurringExpenseService {
+
     @Autowired
-    private RecurringExpenseRepository recurringExpenseRepository;
+    private RecurringExpenseRepository expenseRepository;
 
     public RecurringExpense saveExpense(RecurringExpense expense) {
-        return recurringExpenseRepository.save(expense);
+        return expenseRepository.save(expense);
     }
 
     public List<RecurringExpense> getAllExpenses() {
-        return recurringExpenseRepository.findAll();
+        return expenseRepository.findAll();
     }
 
     public List<RecurringExpense> getExpensesByCategory(String category) {
-        return recurringExpenseRepository.findByCategory(category);
+        return expenseRepository.findAll().stream()
+                .filter(expense -> expense.getCategory().equalsIgnoreCase(category))
+                .toList();
     }
 }

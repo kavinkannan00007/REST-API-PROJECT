@@ -2,11 +2,10 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
+@Table(name = "recurring_expense")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,5 +17,10 @@ public class RecurringExpense {
 
     private String category;
     private BigDecimal amount;
-    private LocalDate nextDueDate;
+    private String frequency;
+
+    // ✅ Many-to-One: Each Recurring Expense belongs to one Investment
+    @ManyToOne
+    @JoinColumn(name = "investment_id", nullable = false)
+    private Investment investment;
 }

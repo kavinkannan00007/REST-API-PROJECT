@@ -7,11 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service  // ✅ Marks this interface as a Service Bean
 public class InvestmentService {
+
     @Autowired
     private InvestmentRepository investmentRepository;
 
@@ -27,11 +27,20 @@ public class InvestmentService {
         return investmentRepository.findById(id);
     }
 
-    public void deleteInvestment(Long id) {
-        investmentRepository.deleteById(id);
+    public Investment updateInvestment(Long id, Investment updatedInvestment) {
+        return investmentRepository.findById(id)
+                .map(existingInvestment -> {
+                    existingInvestment.setName(updatedInvestment.getName());
+                    existingInvestment.setAmount(updatedInvestment.getAmount());
+                    existingInvestment.setInvestmentDate(updatedInvestment.getInvestmentDate());
+                    existingInvestment.setType(updatedInvestment.getType());
+                    existingInvestment.setInterestRate(updatedInvestment.getInterestRate());
+                    return investmentRepository.save(existingInvestment);
+                })
+                .orElseThrow(() -> new RuntimeException("Investment not found"));
     }
 
-    public List<Investment> findInvestmentsByType(String type) {
-        return investmentRepository.findByType(type);
+    public void deleteInvestment(Long id) {
+        investmentRepository.deleteById(id);
     }
 }

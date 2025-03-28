@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/expenses")
+@RequestMapping("/api/recurring-expenses")
 public class RecurringExpenseController {
+
     @Autowired
     private RecurringExpenseService expenseService;
 

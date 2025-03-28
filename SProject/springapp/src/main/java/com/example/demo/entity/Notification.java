@@ -2,10 +2,10 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "notification")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +16,6 @@ public class Notification {
     private Long id;
 
     private String message;
-    private LocalDateTime timestamp;
-    
-    private String type; // ✅ Added field for JPQL filtering (e.g., "INFO", "ALERT")
+    private String type;
+    private LocalDateTime createdAt;
 }

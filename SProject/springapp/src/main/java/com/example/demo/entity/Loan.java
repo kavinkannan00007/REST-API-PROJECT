@@ -2,11 +2,11 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
+//import java.time.LocalDate;
 
 @Entity
+@Table(name = "loan")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,14 +16,8 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String lender;
     private BigDecimal amount;
-    private LocalDate startDate;
-    private LocalDate endDate;
-
     private double interestRate;
-
-    private int duration; // Add this field
-
-    private String status; // Add this field
+    private int duration;
+    private String status;
 }
